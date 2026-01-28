@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Medical Devices Registry</title>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+<style>
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f2f5f9;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background: linear-gradient(90deg, #0a3d62, #1e90ff);
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.container {
+  padding: 20px;
+}
+
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  background: #dcdde1;
+  border-radius: 6px;
+}
+
+.tab-btn.active {
+  background: #0a3d62;
+  color: white;
+}
+
+table.dataTable thead th {
+    white-space: nowrap;
+    text-align: center;
+    font-weight: 600;
+}
+
+table.dataTable tbody td {
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.4;
+    max-width: 250px;   
+}
+
+.table-box {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.table-box {
+  background: rgb(196, 204, 210);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  overflow-x: auto;    
+}
+
+#importerTable tbody tr td:nth-child(2),
+#importerTable tbody tr td:nth-child(4),
+#importerTable tbody td {
+    padding: 6px 8px ;
+    line-height: 1.00 ;
+    vertical-align: top;
+}
+
+.cell-text {
+    line-height: 1.00;
+}
+table.dataTable {
+    width: 200% ;
+}
+.cell-text {
+    font-size: 13px;
+    line-height: 1.35;
+    word-break: break-word;
+    white-space: normal;
+}
+
+.clamp-5 {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+td {
+    outline: 1px dashed rgb(0, 136, 255);
+}
+table.dataTable {
+    width: 200% !important;
+}
+
+.hidden {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+
+<header>
+  <h1>Medical Devices Directory</h1>
+  <p>Manufacturers & Importers – Searchable Registry</p>
+</header>
+
+<div class="container">
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('manufacturers')">🏭 Manufacturers</button>
+    <button class="tab-btn" onclick="showTab('importers')">🚢 Importers</button>
+  </div>
+
+  <!-- Manufacturers Table -->
+  <div id="manufacturers" class="table-box">
+    <table id="manufacturerTable" class="display" style="width:100%">
+      <thead>
+        <tr>
+          <th>S No</th>
+          <th>Manufacturer Name</th>
+          <th>license_number</th>
+          <th>Device</th>
+          <th>Intended Use</th>
+          <th>Issuing Authority</th>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+  <!-- Importers Table -->
+  <div id="importers" class="table-box hidden">
+    <table id="importerTable" class="display" style="width:100%">
+      <thead>
+        <tr>
+            
+          <th>S No</th>
+          <th>Importer Name and address</th>
+          <th>License Number</th>
+          <th>Name of Device and Device Class</th>
+          <th>Intended Use</th>
+          <th>Brand Name</th>
+          <th>Issuing Authority</th>
+          <th>Address</th>
+      
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+</div>
+
+<script>
+let manufacturerLoaded = false;
+let importerLoaded = false;
+
+function showTab(tab) {
+  document.getElementById("manufacturers").classList.add("hidden");
+  document.getElementById("importers").classList.add("hidden");
+
+  document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+
+  if (tab === "manufacturers") {
+    document.getElementById("manufacturers").classList.remove("hidden");
+    document.querySelectorAll(".tab-btn")[0].classList.add("active");
+    if (!manufacturerLoaded) loadManufacturers();
+  } else {
+    document.getElementById("importers").classList.remove("hidden");
+    document.querySelectorAll(".tab-btn")[1].classList.add("active");
+    if (!importerLoaded) loadImporters();
+  }
+}
+
+function loadManufacturers() {
+  $('#manufacturerTable').DataTable({
+    ajax: { url: 'products.json', dataSrc: '' },
+    pageLength: 10,
+    columns: [
+        {
+        data: null,
+        render: function (data, type, row, meta) {
+          return meta.row + 1;
+        }
+        },
+      { data: 'manufacturer' },
+      { data: 'license' },
+      { data: 'device' },
+      { data: 'intended_use' },
+      { data: 'issuing_authority' }
+    ]
+  });
+  manufacturerLoaded = true;
+}
+
+function loadImporters() {
+  $('#importerTable').DataTable({
+    ajax: { url: 'products2.json', dataSrc: '' },
+    pageLength: 10,
+    columns: [
+        { 
+      data: null,
+      render: function (data, type, row, meta) {
+        return meta.row + 1;
+      }
+    },
+      { data: 'Importer Name and address' },
+      { data: 'License Number' },
+      { data: 'Name of Device and Device Class' },
+      { data: 'Intended Use' },
+      { data: 'Brand Name' },
+      { data: 'Issuing Authority' },
+      { data: 'Address' },
+    
+    ]
+  });
+  importerLoaded = true;
+}
+
+
+
+
+
+// Load manufacturers by default
+loadManufacturers();
+
+$(document).ready(function () {
+
+  Promise.all([
+    fetch('products2_part1.json').then(r => r.json()),
+    fetch('products2_part2.json').then(r => r.json()),
+    fetch('products2_part3.json').then(r => r.json())
+  ]).then(allData => {
+
+    const mergedData = allData.flat();
+
+    $('#importerTable').DataTable({
+      data: mergedData,
+      autoWidth: false,
+      columns: [
+        { data: 'sno' },
+        {
+          data: 'Importer Name and address',
+          render: d => `<div class="cell-text clamp-5">${d || ""}</div>`
+        },
+        { data: 'License Number' },
+        {
+          data: 'Address',
+          render: d => `<div class="cell-text clamp-4">${d || ""}</div>`
+        },
+      ]
+    });
+
+  });
+
+});
+</script>
+</script>
+
+</body>
+</html>
