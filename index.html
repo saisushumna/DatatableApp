@@ -212,33 +212,39 @@ function loadManufacturers() {
   manufacturerLoaded = true;
 }
 
-function loadImporters() {
+async function loadImporterData() {
+  const files = [
+    "data/importers_1.json",
+    "data/importers_2.json",
+    "data/importers_3.json"
+  ];
+
+  let allData = [];
+
+  for (let file of files) {
+    const res = await fetch(file);
+    const json = await res.json();
+    allData = allData.concat(json);
+  }
+
   $('#importerTable').DataTable({
-    ajax: { url: 'products2.json', dataSrc: '' },
-    pageLength: 10,
+    data: allData,
+    pageLength: 25,
     columns: [
-        { 
-      data: null,
-      render: function (data, type, row, meta) {
-        return meta.row + 1;
-      }
-    },
-      { data: 'Importer Name and address' },
-      { data: 'License Number' },
-      { data: 'Name of Device and Device Class' },
-      { data: 'Intended Use' },
-      { data: 'Brand Name' },
-      { data: 'Issuing Authority' },
-      { data: 'Address' },
-    
+      {
+        data: null,
+        title: "S No",
+        render: (d, t, r, m) => m.row + 1
+      },
+      { data: "Importer Name and address", title: "Importer" },
+      { data: "License Number", title: "License" },
+      { data: "Name of Device and Device Class", title: "Device" },
+      { data: "Issuing Authority", title: "Authority" }
     ]
   });
-  importerLoaded = true;
 }
 
-
-
-
+loadImporterData();
 
 // Load manufacturers by default
 loadManufacturers();
@@ -278,4 +284,5 @@ $(document).ready(function () {
 
 </body>
 </html>
+
 
