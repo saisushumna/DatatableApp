@@ -236,10 +236,13 @@ async function loadImporterData() {
         title: "S No",
         render: (d, t, r, m) => m.row + 1
       },
-      { data: "Importer Name and address", title: "Importer" },
-      { data: "License Number", title: "License" },
-      { data: "Name of Device and Device Class", title: "Device" },
-      { data: "Issuing Authority", title: "Authority" }
+      { data: "Importer Name and address", title: "Importer Name and address" },
+      { data: "License Number", title: "License Number" },
+      { data: "Name of Device and Device Class", title: "Name of Device and Device Class" },
+      { data:  "Intended Use",title: "Intended Use" },
+      { data: "Brand Name",title:"Brand Name" },
+      { data: "Issuing Authority", title: "Issuing Authority" },
+      { data: "Address",title:"Address" }
     ]
   });
 }
@@ -284,6 +287,7 @@ $(document).ready(function () {
 
 </body>
 </html>
+
 
 
 
