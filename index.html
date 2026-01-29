@@ -238,6 +238,12 @@ function loadImporters()
       destroy: true,
       data: allData,
        columns: [
+          { 
+      data: null,
+      render: function (data, type, row, meta) {
+        return meta.row + 1;
+      }
+    },
       { data: 'Importer Name and address' },
       { data: 'License Number' },
       { data: 'Name of Device and Device Class' },
@@ -288,6 +294,7 @@ $(document).ready(function () {
 });
 </script>
 </script>
+
 
 
 
