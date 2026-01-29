@@ -247,26 +247,6 @@ async function loadImporterData() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  loadManufacturerData();
-  loadImporterData();
-});
-
-loadImporterData();
-
-// Load manufacturers by default
-loadManufacturers();
-  
-console.log(allData[0]);
-
-$(document).ready(function () {
-
-  Promise.all([
-    fetch('products2_part1.json').then(r => r.json()),
-    fetch('products2_part2.json').then(r => r.json()),
-    fetch('products2_part3.json').then(r => r.json())
-  ]).then(allData => {
-
     const mergedData = allData.flat();
 
     $('#importerTable').DataTable({
@@ -294,6 +274,7 @@ $(document).ready(function () {
 
 </body>
 </html>
+
 
 
 
