@@ -212,17 +212,32 @@ function loadManufacturers() {
   manufacturerLoaded = true;
 }
 
-function loadImporters() {
-  $('#importerTable').DataTable({
-    ajax: { url: 'products2.json', dataSrc: '' },
-    pageLength: 10,
-    columns: [
-        { 
-      data: null,
-      render: function (data, type, row, meta) {
-        return meta.row + 1;
-      }
-    },
+function loadImporters()
+{
+
+  const files = [
+    "data/products_part1.json",
+    "data/products_part2.json",
+    "data/products_part3.json"
+  ];
+
+  Promise.all(
+    files.map(file =>$.ajax({
+        url: file,
+        dataType: "json"
+      })
+    )
+  )
+   .then(function (responses) {
+    // Merge all JSON arrays
+    const allData = [].concat(...responses);
+
+    console.log("Importer records:", allData.length);
+
+    $('#importerTable').DataTable({
+      destroy: true,
+      data: allData,
+       columns: [
       { data: 'Importer Name and address' },
       { data: 'License Number' },
       { data: 'Name of Device and Device Class' },
@@ -232,13 +247,10 @@ function loadImporters() {
       { data: 'Address' },
     
     ]
+    })
   });
   importerLoaded = true;
 }
-
-
-
-
 
 // Load manufacturers by default
 loadManufacturers();
@@ -276,6 +288,7 @@ $(document).ready(function () {
 });
 </script>
 </script>
+
 
 
 
