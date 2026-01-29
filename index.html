@@ -247,9 +247,9 @@ loadImporters();
 $(document).ready(function () {
 
   Promise.all([
-    fetch('products2_part1.json').then(r => r.json()),
-    fetch('products2_part2.json').then(r => r.json()),
-    fetch('products2_part3.json').then(r => r.json())
+    fetch('products_part1.json').then(r => r.json()),
+    fetch('products_part2.json').then(r => r.json()),
+    fetch('products_part3.json').then(r => r.json())
   ]).then(allData => {
 
     const mergedData = allData.flat();
@@ -276,5 +276,6 @@ $(document).ready(function () {
 });
 </script>
 </script>
+
 
 
