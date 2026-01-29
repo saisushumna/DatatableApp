@@ -1,218 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Medical Devices Registry</title>
+  <meta charset="UTF-8">
+  <title>Medical Devices Directory</title>
 
-<!-- DataTables -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
 
-<style>
-body {
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: #f2f5f9;
-  margin: 0;
-  padding: 0;
-}
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-header {
-  background: linear-gradient(90deg, #0a3d62, #1e90ff);
-  color: white;
-  padding: 20px;
-  text-align: center;
-}
+  <!-- DataTables JS -->
+  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
 
-.container {
-  padding: 20px;
-}
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
 
-.tabs {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-}
+    header {
+      background: #0b5ed7;
+      color: white;
+      padding: 16px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
 
-.tab-btn {
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  background: #dcdde1;
-  border-radius: 6px;
-}
+    .container {
+      padding: 20px;
+    }
 
-.tab-btn.active {
-  background: #0a3d62;
-  color: white;
-}
+    .tabs {
+      margin-bottom: 15px;
+    }
 
-table.dataTable thead th {
-    white-space: nowrap;
-    text-align: center;
-    font-weight: 600;
-}
+    .tabs button {
+      background: #dee2e6;
+      border: none;
+      padding: 10px 16px;
+      margin-right: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 4px;
+    }
 
-table.dataTable tbody td {
-    white-space: normal;
-    word-break: break-word;
-    line-height: 1.4;
-    max-width: 250px;   
-}
+    .tabs button.active {
+      background: #0b5ed7;
+      color: white;
+    }
 
-.table-box {
-  background: white;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-.table-box {
-  background: rgb(196, 204, 210);
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  overflow-x: auto;    
-}
+    .table-box {
+      display: none;
+    }
 
-#importerTable tbody tr td:nth-child(2),
-#importerTable tbody tr td:nth-child(4),
-#importerTable tbody td {
-    padding: 6px 8px ;
-    line-height: 1.00 ;
-    vertical-align: top;
-}
+    .table-box.active {
+      display: block;
+    }
 
-.cell-text {
-    line-height: 1.00;
-}
-table.dataTable {
-    width: 200% ;
-}
-.cell-text {
-    font-size: 13px;
-    line-height: 1.35;
-    word-break: break-word;
-    white-space: normal;
-}
+    table.dataTable thead th {
+      background: #e9ecef;
+      white-space: nowrap;
+    }
 
-.clamp-5 {
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-td {
-    outline: 1px dashed rgb(0, 136, 255);
-}
-table.dataTable {
-    width: 200% !important;
-}
-
-.hidden {
-  display: none;
-}
-</style>
+    table.dataTable tbody td {
+      white-space: normal;
+      line-height: 1.4em;
+    }
+  </style>
 </head>
 
 <body>
 
-
 <header>
-  <h1>Medical Devices Directory</h1>
-  <p>Manufacturers & Importers – Searchable Registry</p>
+  Medical Devices – Manufacturers & Importers
 </header>
 
 <div class="container">
 
-  <!-- Tabs -->
   <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('manufacturers')">🏭 Manufacturers</button>
-    <button class="tab-btn" onclick="showTab('importers')">🚢 Importers</button>
+    <button id="btn-manufacturer" class="active" onclick="showManufacturer()">Manufacturers</button>
+    <button id="btn-importer" onclick="showImporter()">Importers</button>
   </div>
 
-  <!-- Manufacturers Table -->
-  <div id="manufacturers" class="table-box">
-    <table id="manufacturerTable" class="display" style="width:100%">
-      <thead>
-        <tr>
-          <th>S No</th>
-          <th>Manufacturer Name</th>
-          <th>license_number</th>
-          <th>Device</th>
-          <th>Intended Use</th>
-          <th>Issuing Authority</th>
-        </tr>
-      </thead>
-    </table>
+  <!-- Manufacturer Table -->
+  <div id="manufacturerBox" class="table-box active">
+    <table id="manufacturerTable" class="display" style="width:100%"></table>
   </div>
 
-  <!-- Importers Table -->
-  <div id="importers" class="table-box hidden">
-    <table id="importerTable" class="display" style="width:100%">
-      <thead>
-        <tr>
-            
-          <th>S No</th>
-          <th>Importer Name and address</th>
-          <th>License Number</th>
-          <th>Name of Device and Device Class</th>
-          <th>Intended Use</th>
-          <th>Brand Name</th>
-          <th>Issuing Authority</th>
-          <th>Address</th>
-      
-        </tr>
-      </thead>
-    </table>
+  <!-- Importer Table -->
+  <div id="importerBox" class="table-box">
+    <table id="importerTable" class="display" style="width:100%"></table>
   </div>
 
 </div>
 
 <script>
-let manufacturerLoaded = false;
-let importerLoaded = false;
+/* ---------------- MANUFACTURERS ---------------- */
+async function loadManufacturers() {
+  const res = await fetch("data/products.json");
+  const data = await res.json();
 
-function showTab(tab) {
-  document.getElementById("manufacturers").classList.add("hidden");
-  document.getElementById("importers").classList.add("hidden");
-
-  document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
-
-  if (tab === "manufacturers") {
-    document.getElementById("manufacturers").classList.remove("hidden");
-    document.querySelectorAll(".tab-btn")[0].classList.add("active");
-    if (!manufacturerLoaded) loadManufacturers();
-  } else {
-    document.getElementById("importers").classList.remove("hidden");
-    document.querySelectorAll(".tab-btn")[1].classList.add("active");
-    if (!importerLoaded) loadImporters();
-  }
-}
-
-function loadManufacturers() {
   $('#manufacturerTable').DataTable({
-    ajax: { url: 'products.json', dataSrc: '' },
-    pageLength: 10,
+    destroy: true,
+    pageLength: 25,
+    data: data,
     columns: [
-        {
-        data: null,
-        render: function (data, type, row, meta) {
-          return meta.row + 1;
-        }
-        },
-      { data: 'manufacturer' },
-      { data: 'license' },
-      { data: 'device' },
-      { data: 'intended_use' },
-      { data: 'issuing_authority' }
+      { data: null, title: "S No", render: (d,t,r,m) => m.row + 1 },
+      { data: "Manufacturer Name and address", title: "Manufacturer" },
+      { data: "License Number", title: "License Number" },
+      { data: "Name of Device and Device Class", title: "Device & Class" },
+      { data: "Issuing Authority", title: "Issuing Authority" }
     ]
   });
-  manufacturerLoaded = true;
 }
 
-async function loadImporterData() {
+/* ---------------- IMPORTERS ---------------- */
+async function loadImporters() {
   const files = [
     "data/products_part1.json",
     "data/products_part2.json",
@@ -221,64 +128,58 @@ async function loadImporterData() {
 
   let allData = [];
 
-  for (let file of files) {
+  for (const file of files) {
     const res = await fetch(file);
     const json = await res.json();
     allData = allData.concat(json);
   }
 
   $('#importerTable').DataTable({
-    data: allData,
+    destroy: true,
     pageLength: 25,
+    data: allData,
     columns: [
-      {
-        data: null,
-        title: "S No",
-        render: (d, t, r, m) => m.row + 1
-      },
-      { data: "Importer Name and address", title: "Importer Name and address" },
+      { data: null, title: "S No", render: (d,t,r,m) => m.row + 1 },
+      { data: "Importer Name and address", title: "Importer" },
       { data: "License Number", title: "License Number" },
-      { data: "Name of Device and Device Class", title: "Name of Device and Device Class" },
-      { data:  "Intended Use",title: "Intended Use" },
-      { data: "Brand Name",title:"Brand Name" },
-      { data: "Issuing Authority", title: "Issuing Authority" },
-      { data: "Address",title:"Address" }
+      { data: "Name of Device and Device Class", title: "Device & Class" },
+      { data: "Intended Use", title: "Intended Use" },
+      { data: "Issuing Authority", title: "Issuing Authority" }
     ]
   });
 }
-loadManufacturers();
-loadImporters();
-    const mergedData = allData.flat();
 
-    $('#importerTable').DataTable({
-      data: mergedData,
-      autoWidth: false,
-      columns: [
-        { data: 'sno' },
-        {
-          data: 'Importer Name and address',
-          render: d => `<div class="cell-text clamp-5">${d || ""}</div>`
-        },
-        { data: 'License Number' },
-        {
-          data: 'Address',
-          render: d => `<div class="cell-text clamp-4">${d || ""}</div>`
-        },
-      ]
-    });
+/* ---------------- TAB SWITCHING ---------------- */
+function showManufacturer() {
+  document.getElementById("manufacturerBox").classList.add("active");
+  document.getElementById("importerBox").classList.remove("active");
+  document.getElementById("btn-manufacturer").classList.add("active");
+  document.getElementById("btn-importer").classList.remove("active");
 
-  });
+  $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+}
 
+function showImporter() {
+  document.getElementById("manufacturerBox").classList.remove("active");
+  document.getElementById("importerBox").classList.add("active");
+  document.getElementById("btn-manufacturer").classList.remove("active");
+  document.getElementById("btn-importer").classList.add("active");
+
+  if (!$.fn.DataTable.isDataTable('#importerTable')) {
+    loadImporters();
+  }
+
+  $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+}
+
+/* ---------------- INIT ---------------- */
+document.addEventListener("DOMContentLoaded", function () {
+  loadManufacturers(); // load by default
 });
-</script>
 </script>
 
 </body>
 </html>
-
-
-
-
 
 
 
