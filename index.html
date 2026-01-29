@@ -247,6 +247,11 @@ async function loadImporterData() {
   });
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+  loadManufacturerData();
+  loadImporterData();
+});
+
 loadImporterData();
 
 // Load manufacturers by default
@@ -287,6 +292,7 @@ $(document).ready(function () {
 
 </body>
 </html>
+
 
 
 
