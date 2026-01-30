@@ -162,7 +162,7 @@ table.dataTable {
           <th>Brand Name</th>
           <th>Issuing Authority</th>
           <th>Address</th>
-          <th>Intended</th>
+        
       
         </tr>
       </thead>
@@ -225,7 +225,7 @@ function loadImporters()
   ];
 
   Promise.all(
-    files.map(file =>$.ajax({url: file, dataSrc: ''})
+    files.map(file =>$.ajax({url: files, dataSrc: ''})
     )
   )
    .then(function (responses) {
@@ -249,8 +249,8 @@ function loadImporters()
       { data: 'Intended Use' },
       { data: 'Brand Name' },
       { data: 'Issuing Authority' },
-      { data: 'Address' },
-      { data: 'Intended'}
+      { data: 'Address' }
+
     
     ]
     })
