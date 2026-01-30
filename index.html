@@ -224,10 +224,7 @@ function loadImporters()
   ];
 
   Promise.all(
-    files.map(file =>$.ajax({
-        url: file,
-        dataType: "json"
-      })
+    files.map(file =>$.ajax({url: file, dataSrc: ''})
     )
   )
    .then(function (responses) {
@@ -238,7 +235,6 @@ function loadImporters()
 
     $('#importerTable').DataTable({
       destroy: true,
-      data: allData,
       columns: [
           { 
       data: null,
@@ -300,6 +296,7 @@ $(document).ready(function () {
 });
 </script>
 </script>
+
 
 
 
