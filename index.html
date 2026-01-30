@@ -237,24 +237,25 @@ function loadImporters()
     $('#importerTable').DataTable({
       destroy: true,
       data: allData,
-       columns: [
-          { 
-      data: null,
-      render: function (data, type, row, meta) {
-        return meta.row + 1;
-      }
-    },
-      { data: 'Importer Name and address' },
-      { data: 'License Number' },
-      { data: 'Name of Device and Device Class' },
-      { data: 'Intended Use' },
-      { data: 'Brand Name' },
-      { data: 'Issuing Authority' },
-      { data: 'Address' },
-    
-    ]
-    })
+      columns: [
+      {
+        title: "S No",
+        data: null,
+        render: (data, type, row, meta) => meta.row + 1
+      },
+      { title: "Importer Name & Address", data: "Importer Name and address" },
+      { title: "License Number", data: "License Number" },
+      { title: "Device Name & Class", data: "Name of Device and Device Class" },
+      { title: "Intended Use", data: "Intended Use" },
+      { title: "Brand Name", data: "Brand Name" },
+      { title: "Issuing Authority", data: "Issuing Authority" },
+      { title: "Address", data: "Address" },
+      { title: "Intended", data: "Intended" }
+    ],
+    scrollX: true,
+    pageLength: 10
   });
+
   importerLoaded = true;
 }
 
@@ -294,6 +295,7 @@ $(document).ready(function () {
 });
 </script>
 </script>
+
 
 
 
