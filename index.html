@@ -150,7 +150,7 @@ table.dataTable {
 
   <!-- Importers Table -->
   <div id="importers" class="table-box hidden">
-    <table id="ImporterTable" class="display" style="width:100%">
+    <table id="importerTable" class="display" style="width:100%">
       <thead>
         <tr>
             
@@ -218,7 +218,9 @@ function loadImporters()
   const files = [
     "data/products_part1.json",
     "data/products_part2.json",
-    "data/products_part3.json"
+    "data/products_part3.json",
+    "data/products_part4.json",
+    "data/products_part5.json"
   ];
 
   Promise.all(
@@ -269,7 +271,9 @@ $(document).ready(function () {
   Promise.all([
     fetch('products_part1.json').then(r => r.json()),
     fetch('products_part2.json').then(r => r.json()),
-    fetch('products_part3.json').then(r => r.json())
+    fetch('products_part3.json').then(r => r.json()),
+    fetch('products_part4.json').then(r => r.json()),
+    fetch('products_part5.json').then(r => r.json())
   ]).then(allData => {
 
     const mergedData = allData.flat();
@@ -296,6 +300,7 @@ $(document).ready(function () {
 });
 </script>
 </script>
+
 
 
 
