@@ -178,7 +178,6 @@ let importerLoaded = false;
 function showTab(tab) {
   document.getElementById("manufacturers").classList.add("hidden");
   document.getElementById("importers").classList.add("hidden");
-
   document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
 
   if (tab === "manufacturers") {
@@ -197,12 +196,10 @@ function loadManufacturers() {
     ajax: { url: 'products.json', dataSrc: '' },
     pageLength: 10,
     columns: [
-        {
+      {
         data: null,
-        render: function (data, type, row, meta) {
-          return meta.row + 1;
-        }
-        },
+        render: (d, t, r, m) => m.row + 1
+      },
       { data: 'manufacturer' },
       { data: 'license' },
       { data: 'device' },
@@ -212,105 +209,56 @@ function loadManufacturers() {
   });
   manufacturerLoaded = true;
 }
-console.log(allImporterData[0]);
 
-document.addEventListener("DOMContentLoaded", function () {
+function loadImporters() {
 
-  function loadImporters() {
+  const files = [
+    'data/products_part1.json',
+    'data/products_part2.json',
+    'data/products_part3.json',
+    'data/products_part4.json',
+    'data/products_part5.json'
+  ];
 
-    const files = [
-      './data/products_part1.json',
-      './data/products_part2.json',
-      './data/products_part3.json',
-      './data/products_part4.json',
-      './data/products_part5.json'
-    ];
+  Promise.all(
+    files.map(f =>
+      fetch(f).then(r => r.ok ? r.json() : []).catch(() => [])
+    )
+  ).then(results => {
 
-    Promise.all(
-      files.map(file =>
-        fetch(file)
-          .then(res => res.ok ? res.json() : [])
-          .catch(() => [])
-      )
-    ).then(results => {
+    const data = results.flat();
 
-      const allData = results.flat();
-
-      if (!allData.length) {
-        console.error("No importer data loaded");
-        return;
-      }
-
-      if ($.fn.DataTable.isDataTable('#importerTable')) {
-        $('#importerTable').DataTable().destroy();
-      }
-
-      $('#importerTable').DataTable({
-        data: allData,
-        scrollX: true,
-        pageLength: 10,
-
-        columns: [
-          {
-            title: "S No",
-            data: null,
-            render: (d, t, r, m) => m.row + 1
-          },
-          { title: "Importer Name and address", data: "Importer Name and address", defaultContent: "" },
-          { title: "License Number", data: "License Number", defaultContent: "" },
-          { title: "Name of Device and Device Class", data: "Name of Device and Device Class", defaultContent: "" },
-          { title: "Intended Use", data: "Intended Use", defaultContent: "" },
-          { title: "Brand Name", data: "Brand Name", defaultContent: "" },
-          { title: "Issuing Authority", data: "Issuing Authority", defaultContent: "" },
-          { title: "Address", data: "Address", defaultContent: "" }
-        ]
-      });
-    });
-  }
-
-  // expose globally for button click
-  window.loadImporters = loadImporters;
-
-});
-
-  
-// Load manufacturers by default
-loadManufacturers();
-loadImporters();
-
-$(document).ready(function () {
-
-  Promise.all([
-    fetch('products_part1.json').then(r => r.json()),
-    fetch('products_part2.json').then(r => r.json()),
-    fetch('products_part3.json').then(r => r.json()),
-    fetch('products_part4.json').then(r => r.json()),
-    fetch('products_part5.json').then(r => r.json())
-  ]).then(allData => {
-
-    const mergedData = allData.flat();
+    if (!data.length) {
+      alert("Importer data not loaded – check JSON path");
+      return;
+    }
 
     $('#importerTable').DataTable({
-      data: mergedData,
-      autoWidth: false,
+      destroy: true,
+      data: data,
+      scrollX: true,
+      pageLength: 10,
       columns: [
-        { data: 'sno' },
         {
-          data: 'Importer Name and address',
-          render: d => `<div class="cell-text clamp-5">${d || ""}</div>`
+          data: null,
+          render: (d, t, r, m) => m.row + 1
         },
-        { data: 'License Number' },
-        {
-          data: 'Address',
-          render: d => `<div class="cell-text clamp-4">${d || ""}</div>`
-        },
+        { data: 'Importer Name and address', defaultContent: "" },
+        { data: 'License Number', defaultContent: "" },
+        { data: 'Name of Device and Device Class', defaultContent: "" },
+        { data: 'Intended Use', defaultContent: "" },
+        { data: 'Brand Name', defaultContent: "" },
+        { data: 'Issuing Authority', defaultContent: "" },
+        { data: 'Address', defaultContent: "" }
       ]
     });
 
+    importerLoaded = true;
   });
+}
 
-});
-</script>
+// load manufacturers by default
+document.addEventListener("DOMContentLoaded", loadManufacturers);
 </script>
 
 
