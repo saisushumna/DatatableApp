@@ -214,119 +214,66 @@ function loadManufacturers() {
 }
 console.log(allImporterData[0]);
 
+document.addEventListener("DOMContentLoaded", function () {
 
-/* ===============================
-   LOAD IMPORTERS + INIT DATATABLE
-   =============================== */
+  function loadImporters() {
 
-function loadImporters() {
+    const files = [
+      './data/products_part1.json',
+      './data/products_part2.json',
+      './data/products_part3.json',
+      './data/products_part4.json',
+      './data/products_part5.json'
+    ];
 
-  const files = [
-    'data/products_part1.json',
-    'data/products_part2.json',
-    'data/products_part3.json',
-    'data/products_part4.json',
-    'data/products_part5.json'
-  ];
+    Promise.all(
+      files.map(file =>
+        fetch(file)
+          .then(res => res.ok ? res.json() : [])
+          .catch(() => [])
+      )
+    ).then(results => {
 
-  Promise.all(
-    files.map(file =>
-      fetch(file)
-        .then(res => {
-          if (!res.ok) {
-            console.warn('File not found:', file);
-            return [];
-          }
-          return res.json();
-        })
-        .catch(err => {
-          console.error('Error loading:', file, err);
-          return [];
-        })
-    )
-  )
-  .then(results => {
+      const allData = results.flat();
 
-    const allImporterData = results.flat();
+      if (!allData.length) {
+        console.error("No importer data loaded");
+        return;
+      }
 
-    console.log('Total importer records:', allImporterData.length);
-    console.log('Sample record:', allImporterData[0]);
+      if ($.fn.DataTable.isDataTable('#importerTable')) {
+        $('#importerTable').DataTable().destroy();
+      }
 
-    if (allImporterData.length === 0) {
-      alert('Importer data not loaded. Check JSON file paths.');
-      return;
-    }
+      $('#importerTable').DataTable({
+        data: allData,
+        scrollX: true,
+        pageLength: 10,
 
-    initImporterTable(allImporterData);
-  });
-}
-
-/* ===============================
-   DATATABLE INITIALIZATION
-   =============================== */
-
-function initImporterTable(data) {
-
-  if ($.fn.DataTable.isDataTable('#importerTable')) {
-    $('#importerTable').DataTable().destroy();
+        columns: [
+          {
+            title: "S No",
+            data: null,
+            render: (d, t, r, m) => m.row + 1
+          },
+          { title: "Importer Name and address", data: "Importer Name and address", defaultContent: "" },
+          { title: "License Number", data: "License Number", defaultContent: "" },
+          { title: "Name of Device and Device Class", data: "Name of Device and Device Class", defaultContent: "" },
+          { title: "Intended Use", data: "Intended Use", defaultContent: "" },
+          { title: "Brand Name", data: "Brand Name", defaultContent: "" },
+          { title: "Issuing Authority", data: "Issuing Authority", defaultContent: "" },
+          { title: "Address", data: "Address", defaultContent: "" }
+        ]
+      });
+    });
   }
 
-  $('#importerTable').DataTable({
-    data: data,
-    destroy: true,
-    pageLength: 10,
-    scrollX: true,
-    autoWidth: false,
+  // expose globally for button click
+  window.loadImporters = loadImporters;
 
-    columns: [
-      {
-        title: "S No",
-        data: null,
-        render: function (data, type, row, meta) {
-          return meta.row + meta.settings._iDisplayStart + 1;
-        }
-      },
-      {
-        title: "Importer Name and Address",
-        data: "Importer Name and address",
-        defaultContent: ""
-      },
-      {
-        title: "License Number",
-        data: "License Number",
-        defaultContent: ""
-      },
-      {
-        title: "Name of Device and Device Class",
-        data: "Name of Device and Device Class",
-        defaultContent: ""
-      },
-      {
-        title: "Intended Use",
-        data: "Intended Use",
-        defaultContent: ""
-      },
-      {
-        title: "Brand Name",
-        data: "Brand Name",
-        defaultContent: ""
-      },
-      {
-        title: "Issuing Authority",
-        data: "Issuing Authority",
-        defaultContent: ""
-      },
-      {
-        title: "Address",
-        data: "Address",
-        defaultContent: ""
-      }
-    ]
-  });
-}
+});
 
-
-
+  
 // Load manufacturers by default
 loadManufacturers();
 loadImporters();
@@ -365,6 +312,7 @@ $(document).ready(function () {
 });
 </script>
 </script>
+
 
 
 
