@@ -214,76 +214,118 @@ function loadManufacturers() {
 }
 console.log(allImporterData[0]);
 
-function loadImporters()
-{
+
+/* ===============================
+   LOAD IMPORTERS + INIT DATATABLE
+   =============================== */
+
+function loadImporters() {
 
   const files = [
-    "data/products_part1.json",
-    "data/products_part2.json",
-    "data/products_part3.json",
-    "data/products_part4.json",
-    "data/products_part5.json"
+    'data/products_part1.json',
+    'data/products_part2.json',
+    'data/products_part3.json',
+    'data/products_part4.json',
+    'data/products_part5.json'
   ];
 
   Promise.all(
-    files.map(file =>$.ajax({url: files, dataSrc: ''})
+    files.map(file =>
+      fetch(file)
+        .then(res => {
+          if (!res.ok) {
+            console.warn('File not found:', file);
+            return [];
+          }
+          return res.json();
+        })
+        .catch(err => {
+          console.error('Error loading:', file, err);
+          return [];
+        })
     )
   )
-   .then(function (responses) {
-    // Merge all JSON arrays
-    const allData = [].concat(...responses);
+  .then(results => {
 
-    console.log("Importer records:", allData.length);
+    const allImporterData = results.flat();
 
-    $('#importerTable').DataTable({
-      destroy: true,
-     
-   columns: [
-  {
-    title: "S No",
-    data: null,
-    render: (data, type, row, meta) =>
-      meta.row + meta.settings._iDisplayStart + 1
-  },
-  {
-    title: "Importer Name and Address",
-    data: "Importer Name and address"
-  },
-  {
-    title: "License Number",
-    data: "License Number"
-  },
-  {
-    title: "Name of Device and Device Class",
-    data: "Name of Device and Device Class" 
-  },
-  {
-    title: "Intended Use",
-    data: "Intended Use"
-  },
-  {
-    title: "Brand Name",
-    data: "Brand Name"
-  },
-  {
-    title: "Issuing Authority",
-    data: "Issuing Authority"
-  },
-  {
-    title: "Address",
-    data: "Address"
-  },
-  {
-    title: "Intended",
-    data: "Intended"
-  }
-]
-    })
+    console.log('Total importer records:', allImporterData.length);
+    console.log('Sample record:', allImporterData[0]);
 
+    if (allImporterData.length === 0) {
+      alert('Importer data not loaded. Check JSON file paths.');
+      return;
+    }
+
+    initImporterTable(allImporterData);
   });
-
-  importerLoaded = true;
 }
+
+/* ===============================
+   DATATABLE INITIALIZATION
+   =============================== */
+
+function initImporterTable(data) {
+
+  if ($.fn.DataTable.isDataTable('#importerTable')) {
+    $('#importerTable').DataTable().destroy();
+  }
+
+  $('#importerTable').DataTable({
+    data: data,
+    destroy: true,
+    pageLength: 10,
+    scrollX: true,
+    autoWidth: false,
+
+    columns: [
+      {
+        title: "S No",
+        data: null,
+        render: function (data, type, row, meta) {
+          return meta.row + meta.settings._iDisplayStart + 1;
+        }
+      },
+      {
+        title: "Importer Name and Address",
+        data: "Importer Name and address",
+        defaultContent: ""
+      },
+      {
+        title: "License Number",
+        data: "License Number",
+        defaultContent: ""
+      },
+      {
+        title: "Name of Device and Device Class",
+        data: "Name of Device and Device Class",
+        defaultContent: ""
+      },
+      {
+        title: "Intended Use",
+        data: "Intended Use",
+        defaultContent: ""
+      },
+      {
+        title: "Brand Name",
+        data: "Brand Name",
+        defaultContent: ""
+      },
+      {
+        title: "Issuing Authority",
+        data: "Issuing Authority",
+        defaultContent: ""
+      },
+      {
+        title: "Address",
+        data: "Address",
+        defaultContent: ""
+      }
+    ]
+  });
+}
+
+
 
 // Load manufacturers by default
 loadManufacturers();
@@ -323,6 +365,7 @@ $(document).ready(function () {
 });
 </script>
 </script>
+
 
 
 
